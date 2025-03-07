@@ -1,0 +1,140 @@
+.patient-list {
+  background: linear-gradient(135deg, #f9fbfd 0%, #ffffff 100%);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  max-width: 700px;
+  margin: 20px auto;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #bdc3c7;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+  color: #e74c3c;
+}
+
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.patient-list input[type="text"] {
+  width: 100%;
+  padding: 10px 15px;
+  border: none;
+  border-bottom: 1.5px solid #e8ecef;
+  border-radius: 0;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.95rem;
+  background: transparent;
+  color: #2c3e50;
+  transition: border-color 0.3s ease;
+}
+
+.patient-list input[type="text"]::placeholder {
+  color: #95a5a6;
+  font-style: italic;
+}
+
+.patient-list input[type="text"]:focus {
+  outline: none;
+  border-bottom-color: #1abc9c;
+}
+
+.patient-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.patient-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  margin: 6px 0;
+  border-radius: 8px;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.patient-list li:hover {
+  background: #eef4fa;
+  transform: translateX(3px);
+}
+
+.patient-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.patient-name {
+  color: #1a3c6d;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.patient-details {
+  color: #7f8c8d;
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+
+.patient-actions {
+  display: flex;
+  gap: 3px;
+}
+
+.patient-list button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.patient-list button:first-child {
+  background: #1abc9c; /* Teal */
+}
+
+.patient-list button:last-child {
+  background: #ff6b6b; /* Coral */
+}
+
+.patient-list button:hover {
+  filter: brightness(1.1);
+}
+.patient-list h1 {
+  color: #1a3c6d;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .patient-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .patient-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

@@ -1,0 +1,112 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.request-form {
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.request-form h2 {
+  color: #1a3c6d;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.request-form label {
+  display: block;
+  margin: 15px 0 5px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.request-form input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e8ecef;
+  border-radius: 6px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.request-form h3 {
+  color: #2c3e50;
+  margin: 20px 0 10px;
+  font-size: 1.1rem;
+}
+
+.test-options label {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #f9fbfd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.test-options label:hover {
+  background-color: #eef4fa;
+}
+
+.request-form input[type="checkbox"] {
+  margin-right: 10px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.button-group button[type="submit"] {
+  background-color: #1abc9c; /* Matching teal */
+  color: white;
+}
+
+.button-group button[type="button"] {
+  background-color: #ff6b6b; /* Matching coral */
+  color: white;
+}
+
+.button-group button:hover {
+  filter: brightness(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .request-form {
+    padding: 20px;
+    width: 90%;
+  }
+}

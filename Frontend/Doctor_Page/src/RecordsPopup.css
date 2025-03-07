@@ -1,0 +1,102 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .records-popup {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 450px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    color: #bdc3c7;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  
+  .close-btn:hover {
+    color: #e74c3c;
+  }
+  
+  .patient-title {
+    color: #1a3c6d;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .summary p {
+    color: #555;
+    line-height: 1.5;
+    font-size: 0.9rem;
+    margin: 0 0 15px;
+  }
+  
+  .insights h3,
+  .files h3 {
+    color: #2c3e50;
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 15px 0 10px;
+  }
+  
+  .insight-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e8ecef;
+    font-size: 0.85rem;
+    color: #34495e;
+  }
+  
+  .files ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .files li {
+    padding: 6px 0;
+    font-size: 0.85rem;
+  }
+  
+  .files a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  
+  .files a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .records-popup {
+      width: 90%;
+      padding: 15px;
+    }
+  }
