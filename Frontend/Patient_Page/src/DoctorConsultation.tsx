@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, Star, Search, Calendar, Clock, Video, Stethoscope } from 'lucide-react';
+import { ChevronLeft, Star, Search, Video, Stethoscope } from 'lucide-react';
 
 interface Doctor {
   id: number;
@@ -130,22 +130,58 @@ const doctors: Doctor[] = [
     hospital: 'Mount Sinai Hospital',
     fees: '$100'
   }
-  
 ];
+
+// Define unique time slots per doctor and day (using day index modulo 7 for variety)
+const getDoctorTimeSlots = (doctorId: number, consultationType: 'virtual' | 'in-person', dayIndex: number) => {
+  const allSlots = {
+    virtual: [
+      ['9:00 AM', '10:00 AM', '11:00 AM', '1:00 PM', '2:00 PM'],
+      ['10:00 AM', '11:30 AM', '2:00 PM', '3:30 PM', '5:00 PM'],
+      ['9:30 AM', '11:00 AM', '1:30 PM', '3:00 PM', '4:30 PM'],
+      ['8:00 AM', '9:00 AM', '12:00 PM', '2:00 PM', '4:00 PM'],
+      ['10:00 AM', '12:00 PM', '1:00 PM', '3:00 PM', '5:00 PM'],
+      ['9:00 AM', '10:30 AM', '2:30 PM', '4:00 PM'],
+      ['8:30 AM', '11:00 AM', '1:00 PM', '3:30 PM'],
+    ],
+    'in-person': [
+      ['10:00 AM', '11:00 AM', '2:00 PM', '3:00 PM', '4:00 PM'],
+      ['9:00 AM', '11:00 AM', '1:00 PM', '3:00 PM', '5:00 PM'],
+      ['8:30 AM', '10:30 AM', '12:30 PM', '2:30 PM'],
+      ['9:30 AM', '11:30 AM', '1:30 PM', '3:30 PM', '4:30 PM'],
+      ['10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM'],
+      ['9:00 AM', '11:00 AM', '1:00 PM', '3:00 PM', '5:00 PM'],
+      ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM'],
+    ]
+  };
+
+  // Use doctorId to shift the starting index, and dayIndex % 7 to cycle through the week
+  const typeSlots = allSlots[consultationType];
+  const slotIndex = (doctorId + (dayIndex % 7)) % typeSlots.length;
+  return typeSlots[slotIndex] || [];
+};
 
 const DoctorConsultation = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>('all');
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [consultationType, setConsultationType] = useState<'virtual' | 'in-person' | null>(null);
+  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
 
-  // Get unique specialties for the filter dropdown
+  // Generate next 28 days (7 columns x 4 rows)
+  const days = Array.from({ length: 28 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() + i);
+    return date;
+  });
+
+  const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
   const specialties = ['all', ...new Set(doctors.map(doctor => doctor.specialty))];
 
-  // Filter doctors based on search query and selected specialty
   const filteredDoctors = doctors.filter(doctor => {
     const matchesSearch = doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase());
@@ -155,11 +191,29 @@ const DoctorConsultation = () => {
 
   const handleBookAppointment = () => {
     if (selectedDoctor && selectedDate && selectedTime && consultationType) {
-      alert(`Appointment booked with ${selectedDoctor.name} on ${selectedDate} at ${selectedTime} (${consultationType === 'virtual' ? 'Virtual Meeting' : 'Hospital Visit'})`);
+      alert(`Appointment booked with ${selectedDoctor.name} on ${selectedDate.toDateString()} at ${selectedTime} (${consultationType === 'virtual' ? 'Virtual Meeting' : 'Hospital Visit'})`);
       setSelectedDoctor(null);
       setConsultationType(null);
+      setSelectedDate(null);
+      setSelectedTime(null);
+      setAvailableSlots([]);
     } else {
       alert('Please select date, time, and consultation type');
+    }
+  };
+
+  const handleConsultationTypeChange = (type: 'virtual' | 'in-person') => {
+    setConsultationType(type);
+    setSelectedDate(null);
+    setSelectedTime(null);
+    setAvailableSlots([]);
+  };
+
+  const handleDateClick = (date: Date, index: number) => {
+    setSelectedDate(date);
+    if (selectedDoctor && consultationType) {
+      const slots = getDoctorTimeSlots(selectedDoctor.id, consultationType, index);
+      setAvailableSlots(slots);
     }
   };
 
@@ -224,7 +278,6 @@ const DoctorConsultation = () => {
                   onClick={() => setSelectedDoctor(doctor)}
                   className="mt-2 px-4 py-2 bg-[#fff8f8] text-blue-600 rounded-lg hover:bg-[#fffcfc] transition-colors flex items-center space-x-2"
                 >
-                  <Calendar className="w-4 h-4" />
                   <span>Book</span>
                 </button>
               </div>
@@ -236,62 +289,103 @@ const DoctorConsultation = () => {
       {/* Booking Modal */}
       {selectedDoctor && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-[#fff8f8] rounded-2xl p-6 w-full max-w-lg transition-opacity duration-300">
+          <div className="bg-[#fff8f8] rounded-2xl p-6 w-full max-w-4xl transition-opacity duration-300">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">Book Appointment with {selectedDoctor.name}</h2>
             <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">Date</label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="date"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-[#fffcfc] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">Time</label>
-                <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="time"
-                    value={selectedTime}
-                    onChange={(e) => setSelectedTime(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-[#fffcfc] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-                  />
-                </div>
-              </div>
               <div className="flex gap-4">
                 <button
-                  onClick={() => setConsultationType('virtual')}
+                  onClick={() => handleConsultationTypeChange('virtual')}
                   className={`flex-1 px-6 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
                     consultationType === 'virtual' 
                       ? 'bg-blue-600 text-white' 
-                      : 'bg-[#fffcfc] text-blue-600 hover:bg-[#fff8f8]'
+                      : 'bg-[#fffcfc] text-blue-600 hover:bg-blue-100'
                   }`}
                 >
                   <Video className="w-5 h-5" />
                   <span>Virtual Meeting</span>
                 </button>
                 <button
-                  onClick={() => setConsultationType('in-person')}
+                  onClick={() => handleConsultationTypeChange('in-person')}
                   className={`flex-1 px-6 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
                     consultationType === 'in-person' 
                       ? 'bg-green-600 text-white' 
-                      : 'bg-[#fffcfc] text-green-600 hover:bg-[#fff8f8]'
+                      : 'bg-[#fffcfc] text-green-600 hover:bg-green-100'
                   }`}
                 >
                   <Stethoscope className="w-5 h-5" />
                   <span>Hospital Visit</span>
                 </button>
               </div>
+
+              {consultationType && (
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">Select Date</label>
+                  {/* Day Headers - Full Week */}
+                  <div className="grid grid-cols-7 gap-2 mb-2">
+                    {dayNames.map((dayName) => (
+                      <div key={dayName} className="text-center font-semibold text-gray-700">
+                        {dayName}
+                      </div>
+                    ))}
+                  </div>
+                  {/* Date Blocks - 7x4 Grid */}
+                  <div className="grid grid-cols-7 gap-2 mb-4">
+                    {days.map((day, index) => (
+                      <div
+                        key={day.toDateString()}
+                        className={`p-2 border rounded-lg cursor-pointer text-center transition-all ${
+                          selectedDate && selectedDate.toDateString() === day.toDateString()
+                            ? 'bg-blue-200 border-blue-500'
+                            : 'bg-white border-gray-300 hover:bg-gray-100'
+                        }`}
+                        onClick={() => handleDateClick(day, index)}
+                      >
+                        <p className="text-sm font-medium whitespace-pre">
+                          {day.toLocaleDateString('en-US', { day: 'numeric' }) + '\n' + 
+                           day.toLocaleDateString('en-US', { month: 'short' })}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Available Slots Section */}
+                  {selectedDate && (
+                    <div>
+                      <label className="block text-sm font-medium mb-2 text-gray-700">
+                        Available Slots for {selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                      </label>
+                      {availableSlots.length > 0 ? (
+                        <div className="grid grid-cols-3 gap-2">
+                          {availableSlots.map((slot) => (
+                            <button
+                              key={slot}
+                              onClick={() => setSelectedTime(slot)}
+                              className={`px-4 py-2 rounded-lg transition-colors ${
+                                selectedTime === slot
+                                  ? 'bg-blue-600 text-white'
+                                  : 'bg-[#fffcfc] text-blue-600 hover:bg-[#fff8f8]'
+                              }`}
+                            >
+                              {slot}
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-500">No slots available</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="flex gap-4 mt-6">
                 <button
                   onClick={() => {
                     setSelectedDoctor(null);
                     setConsultationType(null);
+                    setSelectedDate(null);
+                    setSelectedTime(null);
+                    setAvailableSlots([]);
                   }}
                   className="flex-1 px-6 py-3 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
                 >

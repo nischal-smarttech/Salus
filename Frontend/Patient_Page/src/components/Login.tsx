@@ -12,6 +12,10 @@ const Login = () => {
     // Doctor login logic (to be implemented)
   };
 
+  const handleSignup = () => {
+    navigate('/signup');
+  };
+
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-between p-6"
@@ -91,9 +95,36 @@ const Login = () => {
               </svg>
               <span className="text-lg font-semibold">Doctor Login</span>
             </button>
-          </div>
 
-          <div className="my-8 border-t border-gray-200 relative z-10" />
+            {/* Signup Button - Centered with Orange-Amber Gradient */}
+            <div className="flex justify-center mt-6 relative z-10">
+              <div className="text-center">
+                <p className="text-gray-600 mb-4 text-sm font-medium">
+                  New here? Create an account!
+                </p>
+                <button
+                  onClick={handleSignup}
+                  className="w-full max-w-xs bg-gradient-to-r from-orange-500 to-amber-500 text-white py-2 px-4 rounded-xl hover:from-orange-600 hover:to-amber-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 transform hover:scale-105"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    />
+                  </svg>
+                  <span className="text-lg font-semibold">Sign Up</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

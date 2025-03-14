@@ -1,0 +1,100 @@
+/* Doctor Home Page Styles */
+.app-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.appointments-list {
+  margin-top: 20px;
+}
+
+.appointment-item {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+.appointment-item.open {
+  background: #f8f9fa;
+}
+
+.appointment-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.patient-info {
+  flex: 1;
+}
+
+.patient-name {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.patient-details {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.appointment-time {
+  font-weight: bold;
+  color: #333;
+}
+
+.appointment-details {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.app-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+}
+
+.footer-item {
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.footer-item:hover {
+  background: #f8f9fa;
+}
+
+.footer-icon {
+  font-size: 1.2em;
+  margin-bottom: 4px;
+}
+
+.new-patient-icon {
+  color: #ff6b6b;
+  margin-left: 8px;
+}
