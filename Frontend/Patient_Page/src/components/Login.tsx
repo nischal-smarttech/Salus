@@ -9,8 +9,9 @@ const Login = () => {
   };
 
   const handleDoctorLogin = () => {
-    // Doctor login logic (to be implemented)
+    navigate('/doctor-dashboard');
   };
+
 
   const handleSignup = () => {
     navigate('/signup');
@@ -104,7 +105,7 @@ const Login = () => {
                 </p>
                 <button
                   onClick={handleSignup}
-                  className="w-full max-w-xs bg-gradient-to-r from-orange-500 to-amber-500 text-white py-2 px-4 rounded-xl hover:from-orange-600 hover:to-amber-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 transform hover:scale-105"
+                  className="w-full max-w-xs bg-gradient-to-r from-orange-500 to-amber-500 text-white py-3 px-6 rounded-xl hover:from-orange-600 hover:to-amber-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 transform hover:scale-105"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

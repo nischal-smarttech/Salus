@@ -1,13 +1,15 @@
+// Home.tsx
 import React, { useState } from 'react';
 import { Clock, Pill, Plus, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import AddMedicationModal from './AddMedicationModal';
 
 function Home() {
   const navigate = useNavigate();
   const [medications, setMedications] = useState([
     { 
       name: 'Metformin', 
-      time: '08:00', 
+      times: ['08:00'], 
       dosage: '500mg',
       type: 'Tablet',
       frequency: 'Daily',
@@ -15,7 +17,7 @@ function Home() {
     },
     { 
       name: 'Lisinopril', 
-      time: '12:00', 
+      times: ['12:00'], 
       dosage: '10mg',
       type: 'Capsule',
       frequency: 'Daily',
@@ -23,17 +25,35 @@ function Home() {
     },
     { 
       name: 'Atorvastatin', 
-      time: '20:00', 
+      times: ['20:00'], 
       dosage: '20mg',
       type: 'Tablet',
       frequency: 'Daily',
       taken: false
     }
   ]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleAddMedication = (newMedication: { name: string; frequency: string; dosage: string; type: string; times: string[]; taken: boolean }) => {
+    setMedications((prev) => [...prev, newMedication]);
+  };
+
+  // Function to determine the upcoming time
+  const getUpcomingTime = (times: string[]) => {
+    const now = new Date();
+    const currentTime = now.getHours() * 60 + now.getMinutes();
+    const upcoming = times
+      .map(time => {
+        const [hours, minutes] = time.split(':').map(Number);
+        return { time, minutes: hours * 60 + minutes };
+      })
+      .filter(t => t.minutes >= currentTime)
+      .sort((a, b) => a.minutes - b.minutes)[0];
+    return upcoming ? upcoming.time : times.sort()[0]; // Fallback to earliest time if all are past
+  };
 
   return (
     <div className="min-h-screen bg-[#fffcfc] p-4 pb-20 relative">
-
       {/* Watermark Background */}
       <div className="absolute inset-0 opacity-10 bg-[url('/medical-pattern.png')] bg-repeat" style={{ zIndex: 0 }}></div>
 
@@ -85,7 +105,7 @@ function Home() {
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5 text-gray-600" />
-                <span className="font-medium">{med.time}</span>
+                <span className="font-medium">{getUpcomingTime(med.times)}</span>
               </div>
               {med.taken && (
                 <CheckCircle className="w-6 h-6 text-green-600" />
@@ -95,13 +115,11 @@ function Home() {
         </div>
         
         <button 
-          className="mt-4 w-full p-3 bg-[#fff8f8] text-blue-600 rounded-lg hover:bg-[#fffcfc] transition-colors flex items-center justify-center gap-2"
-          onClick={() => {
-            // Add medication logic here
-          }}
+          className="mt-4 w-full p-3 bg-[#fff8f8] text-blue-600 rounded-lg hover:bg-[#fffcfc] transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+          onClick={() => setIsModalOpen(true)}
         >
           <Plus className="w-5 h-5" />
-          <span>Add Medication</span>
+          <span className="font-semibold">Add Medication</span>
         </button>
       </div>
 
@@ -125,6 +143,13 @@ function Home() {
           </div>
         </div>
       </div>
+
+      {/* Add Medication Modal */}
+      <AddMedicationModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onAddMedication={handleAddMedication} 
+      />
     </div>
   );
 }

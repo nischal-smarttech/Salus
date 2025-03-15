@@ -8,7 +8,7 @@ function Navigation() {
 
   const navItems = [
     { 
-      path: '/',
+      path: '/home', // Changed from '/' to '/home'
       icon: Home,
       label: 'Home'
     },
@@ -24,7 +24,6 @@ function Navigation() {
     },
     {
       path: '/doctor-consultation',
-
       icon: Stethoscope,
       label: 'Doctor'
     }
@@ -32,8 +31,6 @@ function Navigation() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-100">
-
-
       <div className="flex justify-around p-2">
         {navItems.map((item) => (
           <button
